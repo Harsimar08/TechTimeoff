@@ -282,17 +282,22 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Personal Information Section */}
-      <div className="card" style={{ marginBottom: '32px', padding: '32px', minHeight: '400px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '28px'
-          }}
-        >
-          <h3 style={{ margin: 0, fontSize: '1.5rem' }}>Personal Information</h3>
+      {/* Success/Error Message */}
+      {message.text && (
+        <div style={{
+          padding: '12px 16px',
+          marginBottom: '16px',
+          borderRadius: '8px',
+          background: message.type === 'success' ? '#d1fae5' : '#fee2e2',
+          color: message.type === 'success' ? '#065f46' : '#991b1b',
+          border: `1px solid ${message.type === 'success' ? '#6ee7b7' : '#fca5a5'}`,
+          fontSize: '14px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span>{message.type === 'success' ? '✓' : '⚠️'}</span>
+          {message.text}
         </div>
       )}
 
@@ -407,6 +412,8 @@ export default function Profile() {
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   )
 }
