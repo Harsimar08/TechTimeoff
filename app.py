@@ -10,8 +10,8 @@ import jwt
 JWT_SECRET = os.environ.get('JWT_SECRET', 'dev-secret-key-change-in-production')
 
 app = Flask(__name__)
-# Enable CORS for React frontend
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5174"}})
+# Enable CORS for React frontend (allow all in dev)
+CORS(app)
 
 # Register the profile routes
 app.register_blueprint(profile_routes)
@@ -206,6 +206,49 @@ def login():
             conn.close()
         except Exception:
             pass
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/auth/me', methods=['GET'])
+def get_current_user():
+    """Get current authenticated user from JWT token"""
+    try:
+        auth_header = request.headers.get('Authorization', '')
+        if not auth_header.startswith('Bearer '):
+            return jsonify({'success': False, 'message': 'Missing or invalid token'}), 401
+
+        token = auth_header.split(' ')[1]
+        
+        # Decode JWT token
+        try:
+            payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'success': False, 'message': 'Token expired'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'success': False, 'message': 'Invalid token'}), 401
+
+        user_id = payload.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'message': 'Invalid token payload'}), 401
+
+        # Fetch user from database
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'success': False, 'message': 'Database connection failed'}), 500
+
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, username, email, role FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+
+        return jsonify({'success': True, 'user': user}), 200
+
+    except Exception as e:
+        print(f"Get current user error: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
@@ -551,4 +594,4 @@ def update_profile():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)

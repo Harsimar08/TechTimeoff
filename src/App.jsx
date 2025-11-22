@@ -20,7 +20,32 @@ function ProtectedRoute({ children, allowedRoles }) {
   const { user, isAuthenticated, loading } = useAuth()
   
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>Loading...</div>
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: '16px'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid #e5e7eb',
+          borderTop: '4px solid #2563eb',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }}></div>
+        <p style={{ color: '#6b7280' }}>Loading dashboard...</p>
+        <style>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    )
   }
   
   if (!isAuthenticated) {
@@ -50,8 +75,39 @@ export default function App() {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const location = useLocation()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/auth/callback'
+
+  // Show loading state during auth check
+  if (loading && !isAuthPage) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: '16px',
+        background: '#f6f8fb'
+      }}>
+        <div style={{
+          width: '50px',
+          height: '50px',
+          border: '4px solid #e5e7eb',
+          borderTop: '4px solid #2563eb',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }}></div>
+        <p style={{ color: '#6b7280', fontSize: '16px' }}>Loading...</p>
+        <style>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    )
+  }
 
   if (isAuthPage) {
     return (
@@ -70,7 +126,7 @@ export default function App() {
         <Sidebar open={sidebarOpen} onClose={()=>setSidebarOpen(false)} />
         <main className={`main-root ${sidebarOpen ? 'shifted' : ''}`}>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to={isAuthenticated ? "/faculty/dashboard" : "/login"} replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             
@@ -120,10 +176,14 @@ export default function App() {
                 <FacultyDashboard />
               </ProtectedRoute>
             } />
+            
+            {/* Catch-all - redirect unknown routes to login or home */}
+            <Route path="*" element={<Navigate to={isAuthenticated ? "/faculty/dashboard" : "/login"} replace />} />
           </Routes>
         </main>
       </div>
       <RequestDrawer open={openDrawer} onClose={()=>setOpenDrawer(false)} />
+      <Footer />
     </div>
   )
 }

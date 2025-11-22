@@ -99,6 +99,17 @@ body{
 .btn-primary{background:var(--accent);color:white}
 .btn-ghost{background:transparent;border:1px solid var(--border)}
 
+/* Footer */
+.footer{
+  background: var(--panel);
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: auto;
+}
+
 /* responsive */
 @media (max-width:980px){
   .sidebar{display:none}

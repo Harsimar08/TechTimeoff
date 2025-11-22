@@ -46,15 +46,16 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(intervalId)
   }, [])
 
-  // Load user from API when token exists
+  // Load user from API when token exists (only on app startup)
   useEffect(() => {
     const loadUser = async () => {
-      if (token) {
+      if (token && !user) {
+        // Only fetch if we have token but no user yet (app startup)
         try {
           const userData = await fetchCurrentUser()
           if (userData) {
             setUser(userData)
-            console.log('✅ User loaded from MongoDB:', userData.name || userData.fullName)
+            console.log('User loaded from Flask API:', userData.username)
           } else {
             // Token is invalid, clear it
             setToken(null)
