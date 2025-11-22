@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leave Request Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .leave-request {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leave Request Test Interface</h1>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" value="adi">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" value="adi1234">
+        </div>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Leave Request Form -->
+    <div id="leaveForm" style="display: none;">
+        <h2>Submit Leave Request</h2>
+        <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate">
+        </div>
+        <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate">
+        </div>
+        <div class="form-group">
+            <label for="leaveType">Leave Type:</label>
+            <input type="text" id="leaveType" value="Earned Leave">
+        </div>
+        <div class="form-group">
+            <label for="note">Note:</label>
+            <textarea id="note" rows="3"></textarea>
+        </div>
+        <button onclick="submitLeave()">Submit Leave Request</button>
+    </div>
+
+    <!-- Display Results -->
+    <div id="result"></div>
+
+    <!-- List of Leave Requests -->
+    <div id="leaveList" style="display: none;">
+        <h2>Your Leave Requests</h2>
+        <button onclick="fetchLeaves()">Refresh List</button>
+        <div id="leaveListContent"></div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    currentUser = data.username;
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('leaveForm').style.display = 'block';
+                    document.getElementById('leaveList').style.display = 'block';
+                    document.getElementById('result').innerHTML = `Logged in as ${data.username}`;
+                    fetchLeaves(); // Load leaves after login
+                } else {
+                    document.getElementById('result').innerHTML = 'Login failed: ' + (data.error || 'Unknown error');
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function submitLeave() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const leaveType = document.getElementById('leaveType').value;
+            const note = document.getElementById('note').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/leave', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        from: startDate,
+                        to: endDate,
+                        type: leaveType,
+                        note: note,
+                        username: currentUser
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('result').innerHTML = 'Leave request submitted successfully!';
+                    fetchLeaves(); // Refresh the list
+                } else {
+                    document.getElementById('result').innerHTML = 'Failed to submit leave: ' + (data.error || 'Unknown error');
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function fetchLeaves() {
+            if (!currentUser) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/leaves?username=${currentUser}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const leaveListContent = document.getElementById('leaveListContent');
+                    leaveListContent.innerHTML = ''; // Clear existing content
+                    
+                    data.leaves.forEach(leave => {
+                        const leaveEl = document.createElement('div');
+                        leaveEl.className = 'leave-request';
+                        leaveEl.innerHTML = `
+                            <strong>ID:</strong> ${leave.id}<br>
+                            <strong>From:</strong> ${leave.start_date}<br>
+                            <strong>To:</strong> ${leave.end_date}<br>
+                            <strong>Status:</strong> ${leave.status}<br>
+                            <strong>Note:</strong> ${leave.note || 'N/A'}<br>
+                        `;
+                        leaveListContent.appendChild(leaveEl);
+                    });
+                } else {
+                    document.getElementById('leaveListContent').innerHTML = 'Failed to fetch leaves: ' + (data.error || 'Unknown error');
+                }
+            } catch (error) {
+                document.getElementById('leaveListContent').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        // Set default dates to today and tomorrow
+        window.onload = function() {
+            const today = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1);
+            
+            document.getElementById('startDate').value = today.toISOString().split('T')[0];
+            document.getElementById('endDate').value = tomorrow.toISOString().split('T')[0];
+        };
+    </script>
+</body>
+</html>
