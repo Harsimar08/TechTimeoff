@@ -3,7 +3,11 @@ from flask_cors import CORS
 from routes.profile_routes import profile_routes
 import mysql.connector
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+import jwt
+
+# JWT secret for token generation (override with env var in production)
+JWT_SECRET = os.environ.get('JWT_SECRET', 'dev-secret-key-change-in-production')
 
 app = Flask(__name__)
 # Enable CORS for React frontend
@@ -25,6 +29,185 @@ def get_db_connection():
     except mysql.connector.Error as err:
         print(f"Error connecting to database: {err}")
         return None
+
+
+# -----------------------
+# Authentication endpoints
+# -----------------------
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    data = request.get_json() or {}
+
+    email = data.get('email')
+    # frontend sends 'name' field - use it as username when provided
+    username = data.get('username') or data.get('name') or (email.split('@')[0] if email else None)
+    password = data.get('password')
+    role = data.get('role', 'faculty')
+
+    department = data.get('department')
+    employee_id = data.get('employeeId') or data.get('employee_id')
+    phone = data.get('phoneNumber') or data.get('phone')
+
+    if not all([email, username, password]):
+        return jsonify({'success': False, 'message': 'email, name and password are required'}), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'message': 'Database connection failed'}), 500
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # check existing
+        cursor.execute("SELECT id FROM users WHERE email = %s OR username = %s", (email, username))
+        if cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'User already exists'}), 409
+
+        # insert into users - prefer columns username,email,password,role
+        try:
+            cursor.execute(
+                "INSERT INTO users (username, email, password, role, created_at) VALUES (%s, %s, %s, %s, NOW())",
+                (username, email, password, role)
+            )
+        except Exception:
+            # fallback to simpler columns if schema differs
+            cursor.execute(
+                "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+                (username, email, password)
+            )
+
+        conn.commit()
+        user_id = cursor.lastrowid
+
+        # create a profile record if user_profiles table exists
+        try:
+            cursor.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=%s AND TABLE_NAME='user_profiles'", (os.environ.get('DB_NAME','user_auth'),))
+            cols = [r['COLUMN_NAME'] if isinstance(r, dict) else r[0] for r in cursor.fetchall()]
+            if cols:
+                # insert minimal profile record
+                insert_cols = ['user_id']
+                insert_vals = [user_id]
+                if 'name' in cols:
+                    insert_cols.append('name')
+                    insert_vals.append(username)
+                if 'email' in cols:
+                    insert_cols.append('email')
+                    insert_vals.append(email)
+                if 'role' in cols:
+                    insert_cols.append('role')
+                    insert_vals.append(role)
+                if 'department' in cols and department:
+                    insert_cols.append('department')
+                    insert_vals.append(department)
+                if 'phone' in cols and phone:
+                    insert_cols.append('phone')
+                    insert_vals.append(phone)
+                if 'employee_id' in cols and employee_id:
+                    insert_cols.append('employee_id')
+                    insert_vals.append(employee_id)
+
+                placeholders = ','.join(['%s'] * len(insert_vals))
+                q = f"INSERT INTO user_profiles ({','.join(insert_cols)}) VALUES ({placeholders})"
+                cursor.execute(q, tuple(insert_vals))
+                conn.commit()
+        except Exception:
+            # ignore profile creation errors
+            pass
+
+        # Return created user (minimal) + JWT token
+        cursor.execute("SELECT id, username, email, role FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+
+        # generate token
+        try:
+            token_payload = {
+                'user_id': user_id,
+                'username': username,
+                'email': email,
+                'exp': datetime.utcnow() + timedelta(days=7)
+            }
+            token = jwt.encode(token_payload, JWT_SECRET, algorithm='HS256')
+        except Exception:
+            token = None
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({'success': True, 'message': 'User registered', 'user': user, 'token': token}), 201
+
+    except Exception as e:
+        print(f"Registration error: {e}")
+        try:
+            cursor.close()
+            conn.close()
+        except Exception:
+            pass
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    if not all([email, password]):
+        return jsonify({'success': False, 'message': 'Email and password are required'}), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'message': 'Database connection failed'}), 500
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, username, email, role, password FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        if not user:
+            # try username login
+            cursor.execute("SELECT id, username, email, role, password FROM users WHERE username = %s", (email,))
+            user = cursor.fetchone()
+
+        if not user:
+            cursor.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+
+        # basic password check (plain-text) - recommend hashing in production
+        stored = user.get('password') or user.get('password_hash') or user.get('password_hash')
+        if stored != password:
+            cursor.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+
+        # return user without password + token
+        user.pop('password', None)
+
+        try:
+            token_payload = {
+                'user_id': user['id'],
+                'username': user.get('username'),
+                'email': user.get('email'),
+                'exp': datetime.utcnow() + timedelta(days=7)
+            }
+            token = jwt.encode(token_payload, JWT_SECRET, algorithm='HS256')
+        except Exception:
+            token = None
+
+        cursor.close()
+        conn.close()
+        return jsonify({'success': True, 'message': 'Login successful', 'user': user, 'token': token}), 200
+
+    except Exception as e:
+        print(f"Login error: {e}")
+        try:
+            cursor.close()
+            conn.close()
+        except Exception:
+            pass
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 
 @app.route('/api/users', methods=['GET'])
 def get_users():

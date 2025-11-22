@@ -69,6 +69,88 @@ def get_profile():
         cursor.close()
         conn.close()
 
+
+@profile_routes.route('/api/leave-balances', methods=['GET'])
+def get_leave_balances():
+    username = request.args.get('username')
+    year = request.args.get('year')
+    try:
+        year = int(year) if year else datetime.now().year
+    except Exception:
+        year = datetime.now().year
+
+    if not username:
+        return jsonify({'success': False, 'error': 'Username is required'}), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'error': 'Database connection failed'}), 500
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'}), 404
+
+        cursor.execute("SELECT leave_type, days_available, days_consumed, year FROM leave_balances WHERE user_id = %s AND year = %s", (user['id'], year))
+        balances = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({'success': True, 'balances': balances})
+    except Exception as e:
+        print(f"Error fetching leave balances: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@profile_routes.route('/api/leave-balances', methods=['POST'])
+def upsert_leave_balances():
+    data = request.get_json() or {}
+    username = data.get('username')
+    entries = data.get('balances')
+
+    if not username or not entries:
+        return jsonify({'success': False, 'error': 'username and balances required'}), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'error': 'Database connection failed'}), 500
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'}), 404
+        user_id = user[0]
+
+        for e in entries:
+            leave_type = e.get('leave_type')
+            days_available = e.get('days_available', 0)
+            days_consumed = e.get('days_consumed', 0)
+            year = e.get('year') or datetime.now().year
+
+            # upsert
+            cursor.execute(
+                "INSERT INTO leave_balances (user_id, leave_type, days_available, days_consumed, year) VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE days_available = %s, days_consumed = %s, updated_at = NOW()",
+                (user_id, leave_type, days_available, days_consumed, year, days_available, days_consumed)
+            )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'success': True, 'message': 'Balances updated'})
+    except Exception as e:
+        print(f"Error upserting balances: {e}")
+        try:
+            cursor.close()
+            conn.close()
+        except Exception:
+            pass
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @profile_routes.route('/api/profile', methods=['POST'])
 def update_profile():
     data = request.json

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticateUser } from '../utils/api-auth'
 import { useAuth } from '../contexts/AuthContext'
@@ -50,13 +50,6 @@ export default function Login() {
     } catch (error) {
       setError(error.message || 'Login failed. Please try again.')
     }
-  }
-
-  const handleGitHubLogin = () => {
-    // Get backend URL from environment
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-    const backendUrl = API_URL.replace('/api', '')
-    window.location.href = `${backendUrl}/api/auth/github`
   }
 
   const handleGoogleLogin = () => {
@@ -218,29 +211,6 @@ export default function Login() {
           </div>
 
           {/* OAuth Buttons */}
-          <button onClick={handleGitHubLogin} style={{
-            width: '100%',
-            padding: '12px',
-            marginBottom: '12px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none',
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '15px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <span>📱</span> Continue with GitHub
-          </button>
-
           <button onClick={handleGoogleLogin} style={{
             width: '100%',
             padding: '12px',
