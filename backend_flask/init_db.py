@@ -149,7 +149,18 @@ def reset_database():
         print('⚠️ WARNING: This will delete ALL data!')
         confirm = input('Type "yes" to confirm: ')
         if confirm.lower() == 'yes':
+            # Disable foreign key checks to allow dropping tables with constraints
+            db.session.execute(db.text('SET FOREIGN_KEY_CHECKS=0;'))
+            db.session.commit()
+            
+            # Drop all tables
             db.drop_all()
+            
+            # Re-enable foreign key checks
+            db.session.execute(db.text('SET FOREIGN_KEY_CHECKS=1;'))
+            db.session.commit()
+            
+            # Create tables
             db.create_all()
             print('✅ Database reset successfully')
         else:

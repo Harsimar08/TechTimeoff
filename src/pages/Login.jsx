@@ -217,52 +217,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* OAuth Buttons */}
-          <button onClick={handleGitHubLogin} style={{
-            width: '100%',
-            padding: '12px',
-            marginBottom: '12px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none',
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '15px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <span>📱</span> Continue with GitHub
-          </button>
-
-          <button onClick={handleGoogleLogin} style={{
-            width: '100%',
-            padding: '12px',
-            marginBottom: '20px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none',
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '15px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <span>🔍</span> Continue with Google
-          </button>
 
           <div style={{
             display: 'flex',
@@ -272,7 +226,7 @@ export default function Login() {
             fontSize: '14px'
           }}>
             <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }}></div>
-            <span style={{ padding: '0 12px' }}>or continue with email</span>
+            <span style={{ padding: '0 12px' }}>and continue with email</span>
             <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.2)' }}></div>
           </div>
 
