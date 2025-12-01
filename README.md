@@ -1,4 +1,4 @@
-# TechTimeoff
+# TeachTimeoff
 
 Merged branch including both kritikay and Aditya changes.
 
