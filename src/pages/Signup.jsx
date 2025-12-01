@@ -241,29 +241,6 @@ export default function Signup() {
             <span>📱</span> Continue with GitHub
           </button>
 
-          <button onClick={handleGoogleLogin} type="button" style={{
-            width: '100%',
-            padding: '12px',
-            marginBottom: '20px',
-            background: 'linear-gradient(135deg, #ea4335 0%, #4285f4 100%)',
-            border: 'none',
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '15px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <span>🔍</span> Continue with Google
-          </button>
-
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -702,30 +679,8 @@ export default function Signup() {
             </button>
           </form>
 
-          {/* OAuth Buttons */}
+          {/* OAuth Buttons - Removed Google, kept GitHub */}
           <div style={{ margin: '24px 0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button
-              onClick={handleGoogleLogin}
-              style={{
-                padding: '14px',
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: '12px',
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'background 0.3s, transform 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.15)'}
-              onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
-            >
-              <span>🔗</span> Sign up with Google
-            </button>
             <button
               onClick={handleGitHubLogin}
               style={{

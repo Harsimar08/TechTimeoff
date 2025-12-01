@@ -13,7 +13,11 @@ class User(db.Model):
     department = db.Column(db.String(100))
     employee_id = db.Column(db.String(50), unique=True)
     phone_number = db.Column(db.String(20))
-    profile_image = db.Column(db.String(255))
+    profile_image = db.Column(db.Text)  # Changed to Text for large base64 images
+    qualification = db.Column(db.String(100))
+    specialization = db.Column(db.String(100))
+    gender = db.Column(db.String(20))
+    joining_date = db.Column(db.Date)
     google_id = db.Column(db.String(100), unique=True)
     github_id = db.Column(db.String(100), unique=True)
     is_active = db.Column(db.Boolean, default=True)
@@ -43,6 +47,10 @@ class User(db.Model):
             'employeeId': self.employee_id,
             'phoneNumber': self.phone_number,
             'profileImage': self.profile_image,
+            'qualification': self.qualification,
+            'specialization': self.specialization,
+            'gender': self.gender,
+            'joiningDate': self.joining_date.isoformat() if self.joining_date else None,
             'isActive': self.is_active,
             'createdAt': self.created_at.isoformat() if self.created_at else None,
             'updatedAt': self.updated_at.isoformat() if self.updated_at else None

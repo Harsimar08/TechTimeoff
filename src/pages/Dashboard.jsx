@@ -12,11 +12,13 @@ const leaveTypes = [
 
 export default function Dashboard(){
   const navigate = useNavigate()
-  const [profile, setProfile] = React.useState({ name: 'kritika', email: 'kritika.yadav@jims.edu', department: 'Computer Applications' })
+  const { user } = useAuth()
+  
   const [profileImage, setProfileImage] = React.useState(null)
   const [selectedType, setSelectedType] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [searchText, setSearchText] = useState('')
+  
 
   const [leaveHistory] = useState([
     {
@@ -151,54 +153,260 @@ export default function Dashboard(){
   }, [selectedType, selectedStatus, searchText, leaveHistory])
 
   return (
-    <div className="dashboard-layout" style={{ background: '#f7f7f7', minHeight: '100vh', padding: '32px' }}>
-      {/* Welcome Header */}
-      <div className="page-title" style={{ marginBottom: 32 }}>
-        <div>
-          <h2 style={{margin:0}}>Welcome, {profile.name.split(' ')[0]}</h2>
-          <div style={{color:'var(--muted)'}}>Faculty Dashboard</div>
-        </div>
-      </div>
+    <div className="dashboard-layout" style={{
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      minHeight: '100vh',
+      padding: '32px',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Animated background shapes */}
+      <div style={{
+        position: 'absolute',
+        top: '-100px',
+        right: '-100px',
+        width: '400px',
+        height: '400px',
+        background: 'rgba(255,255,255,0.1)',
+        borderRadius: '50%',
+        filter: 'blur(60px)',
+        animation: 'float 6s ease-in-out infinite'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        bottom: '-150px',
+        left: '-150px',
+        width: '500px',
+        height: '500px',
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: '50%',
+        filter: 'blur(80px)',
+        animation: 'float 8s ease-in-out infinite reverse'
+      }}></div>
+      
+      <div style={{position: 'relative', zIndex: 1}}>
+        {/* Welcome Header */}
+        <div className="page-title" style={{marginBottom: 32, animation: 'slideDown 0.6s ease-out'}}>
+          <div>
+            <h2 style={{
+              margin: 0,
+              fontSize: 36,
+              fontWeight: 800,
+              color: 'white',
+              textShadow: '0 2px 10px rgba(0,0,0,0.2)'
+            }}>
+              Welcome back, {user?.name?.split(' ')[0] || 'User'} 👋
+            </h2>
+            <div style={{
+              color: 'rgba(255,255,255,0.95)',
+              fontSize: 16,
+              fontWeight: 500,
+              marginTop: 8
+            }}>
+              {user?.role ? user.role.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') + ' Dashboard' : 'Faculty Dashboard'}
+            </div>
 
-      {/* Top Row: Profile Card and Leave Summary */}
-      <div className="dashboard-row top" style={{ display: 'flex', gap: '32px', marginBottom: 32 }}>
-        {/* Profile Card */}
-        <div className="dashboard-card profile-card" style={{ flex: '0 0 340px', height: '420px', background: '#fff', borderRadius: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', padding: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: 220 }}>
-          <img src={profileImage || profile.avatar || "https://i.pravatar.cc/150?img=12"} alt="Profile" style={{ width: 96, height: 96, borderRadius: '50%', marginBottom: 24, objectFit: 'cover' }} />
-          <div className="profile-meta" style={{ textAlign: 'center' }}>
-            <h2 className="profile-name" style={{ fontSize: 26, margin: 0, fontWeight: 700 }}>{profile.name}</h2>
-            <p className="profile-role" style={{ margin: '8px 0', color: '#888', fontSize: 18 }}>{profile.role || 'Teacher'}</p>
-            <p className="profile-dept" style={{ margin: 0, color: '#444', fontSize: 18 }}>{profile.department}</p>
           </div>
         </div>
 
-        {/* Leave Summary (Graphical) */}
-        <div className="dashboard-card" style={{ flex: 1, background: '#fff', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', padding: '1px 0 8px 0', minWidth: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h3 className="card-title" style={{ fontSize: 30, marginBottom: 12, width: '100%', textAlign: 'center', paddingLeft: 24 }}>Leave Summary</h3>
-          <div className="leave-summary-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '18px', width: '100%', justifyItems: 'center', alignItems: 'start', padding: '0 24px', justifyContent: 'center' }}>
-            {leaveTypes.map(leave => (
-              <div key={leave.id} className="leave-summary-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#f9f9f9', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', padding: '16px 8px', minWidth: '140px', marginBottom: 0, width: '100%' }}>
-                <CircleProgress
-                  percentage={(leave.available / leave.total) * 100}
-                  color={leave.color}
-                  size={56}
-                  strokeWidth={6}
-                />
-                <div className="progress-info" style={{ fontWeight: 700, fontSize: 20, margin: '6px 0 2px 0', color: leave.color }}>{leave.available}</div>
-                <div className="leave-details" style={{ textAlign: 'center' }}>
-                  <div className="leave-name" style={{ fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{leave.name}</div>
-                  <div className="leave-mini-stats" style={{ fontSize: 15, color: '#444', marginTop: 2 }}>
-                    <span className="stat-label">Total: <strong>{leave.total}</strong></span>
-                    <span className="stat-label" style={{ marginLeft: 8 }}>Used: <strong>{leave.used}</strong></span>
+        {/* Top Row: Profile Card and Leave Summary */}
+        <div className="dashboard-row top" style={{
+          display: 'flex',
+          gap: '32px',
+          marginBottom: 32,
+          flexWrap: 'wrap'
+        }}>
+          {/* Profile Card */}
+          <div className="dashboard-card profile-card" style={{
+            flex: '0 0 340px',
+            minHeight: '420px',
+            background: '#ffffff',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            borderRadius: '24px',
+            padding: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minWidth: 220,
+            transition: 'all 0.4s ease',
+            animation: 'fadeInUp 0.8s ease-out 0.1s backwards',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'
+            e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.25)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)'
+            e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15)'
+          }}>
+            <div style={{
+              position: 'relative',
+              marginBottom: 24
+            }}>
+              <img 
+                src={user?.profileImage || "https://i.pravatar.cc/150?img=12"} 
+                alt="Profile" 
+                style={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '4px solid white',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
+                }} 
+              />
+              <div style={{
+                position: 'absolute',
+                bottom: 5,
+                right: 5,
+                width: 24,
+                height: 24,
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                borderRadius: '50%',
+                border: '3px solid white',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}></div>
+            </div>
+            <div className="profile-meta" style={{textAlign: 'center'}}>
+              <h2 className="profile-name" style={{
+                fontSize: 28,
+                margin: 0,
+                fontWeight: 800,
+                color: '#1a1a1a',
+                marginBottom: 8
+              }}>
+                {user?.name || 'User'}
+              </h2>
+              <p className="profile-role" style={{
+                margin: '8px 0',
+                color: '#667eea',
+                fontSize: 16,
+                fontWeight: 600,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                {user?.role ? user.role.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Faculty'}
+              </p>
+              <p className="profile-dept" style={{
+                margin: 0,
+                color: '#666',
+                fontSize: 15,
+                fontWeight: 500
+              }}>
+                {user?.department || 'Not specified'}
+              </p>
+              <p className="profile-email" style={{
+                margin: '8px 0 0 0',
+                color: '#888',
+                fontSize: 13,
+                fontWeight: 400
+              }}>
+                {user?.email || ''}
+              </p>
+            </div>
+          </div>
+
+          {/* Leave Summary (Graphical) */}
+          <div className="dashboard-card" style={{
+            flex: 1,
+            background: '#ffffff',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            borderRadius: '24px',
+            padding: '32px',
+            minWidth: 280,
+            display: 'flex',
+            flexDirection: 'column',
+            animation: 'fadeInUp 0.8s ease-out 0.2s backwards'
+          }}>
+            <h3 className="card-title" style={{
+              fontSize: 28,
+              marginBottom: 24,
+              fontWeight: 800,
+              color: '#1a1a1a',
+              textAlign: 'center'
+            }}>
+              📊 Leave Summary
+            </h3>
+            <div className="leave-summary-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '20px',
+              width: '100%'
+            }}>
+              {leaveTypes.map((leave, index) => (
+                <div 
+                  key={leave.id} 
+                  className="leave-summary-item" 
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    background: `linear-gradient(135deg, ${leave.color}10 0%, ${leave.color}05 100%)`,
+                    borderRadius: '20px',
+                    border: `2px solid ${leave.color}30`,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                    padding: '24px 16px',
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    cursor: 'pointer',
+                    animation: `fadeInUp 0.6s ease-out ${0.1 * index}s backwards`
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
+                    e.currentTarget.style.boxShadow = `0 12px 32px ${leave.color}40`
+                    e.currentTarget.style.background = `linear-gradient(135deg, ${leave.color}20 0%, ${leave.color}10 100%)`
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'
+                    e.currentTarget.style.background = `linear-gradient(135deg, ${leave.color}10 0%, ${leave.color}05 100%)`
+                  }}
+                >
+                  <CircleProgress
+                    percentage={(leave.available / leave.total) * 100}
+                    color={leave.color}
+                    size={70}
+                    strokeWidth={7}
+                  />
+                  <div className="progress-info" style={{
+                    fontWeight: 800,
+                    fontSize: 28,
+                    margin: '12px 0 8px 0',
+                    color: leave.color
+                  }}>
+                    {leave.available}
+                  </div>
+                  <div className="leave-details" style={{textAlign: 'center'}}>
+                    <div className="leave-name" style={{
+                      fontWeight: 700,
+                      fontSize: 16,
+                      marginBottom: 8,
+                      color: '#1a1a1a'
+                    }}>
+                      {leave.name}
+                    </div>
+                    <div className="leave-mini-stats" style={{
+                      fontSize: 13,
+                      color: '#666',
+                      display: 'flex',
+                      gap: 12,
+                      justifyContent: 'center'
+                    }}>
+                      <span className="stat-label">Total: <strong style={{color: '#1a1a1a'}}>{leave.total}</strong></span>
+                      <span>•</span>
+                      <span className="stat-label">Used: <strong style={{color: '#1a1a1a'}}>{leave.used}</strong></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Leave Balance Section */}
+        </div>      {/* Leave Balance Section */}
       <div className="dashboard-row" style={{ marginBottom: 32 }}>
         <div className="dashboard-card leave-balance-section" style={{ background: '#fff', borderRadius: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', padding: '40px 32px', width: '100%' }}>
           <h3 className="card-title" style={{ fontSize: 32, fontWeight: 700, marginBottom: 32, textAlign: 'center', letterSpacing: 1 }}>Leave Balance</h3>
@@ -430,6 +638,34 @@ export default function Dashboard(){
           </div>
         </div>
       </div>
+      </div>
+      
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   )
 }

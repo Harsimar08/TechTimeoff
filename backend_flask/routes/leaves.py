@@ -10,9 +10,19 @@ leaves_bp = Blueprint('leaves', __name__)
 # @route   POST /api/leaves
 # @desc    Create a new leave request
 # @access  Private
-@leaves_bp.route('/', methods=['POST'])
-@jwt_required()
+@leaves_bp.route('/', methods=['POST', 'OPTIONS'])
+@jwt_required(optional=True)
 def create_leave():
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual POST request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
     try:
         # Get user ID from JWT
         user_id = int(get_jwt_identity())
@@ -77,9 +87,19 @@ def create_leave():
 # @route   GET /api/leaves
 # @desc    Get all leave requests (filtered by role)
 # @access  Private
-@leaves_bp.route('/', methods=['GET'])
-@jwt_required()
+@leaves_bp.route('/', methods=['GET', 'OPTIONS'])
+@jwt_required(optional=True)
 def get_all_leaves():
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual GET request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
     try:
         # Get user ID and role from JWT
         user_id = int(get_jwt_identity())
@@ -110,9 +130,20 @@ def get_all_leaves():
 # @route   GET /api/leaves/:id
 # @desc    Get leave by ID
 # @access  Private
-@leaves_bp.route('/<int:leave_id>', methods=['GET'])
-@jwt_required()
+@leaves_bp.route('/<int:leave_id>', methods=['GET', 'OPTIONS'])
+@jwt_required(optional=True)
 def get_leave_by_id(leave_id):
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual GET request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
+    
     try:
         # Get user ID and role from JWT
         user_id = int(get_jwt_identity())
@@ -149,9 +180,20 @@ def get_leave_by_id(leave_id):
 # @route   PUT /api/leaves/:id
 # @desc    Update leave request
 # @access  Private
-@leaves_bp.route('/<int:leave_id>', methods=['PUT'])
-@jwt_required()
+@leaves_bp.route('/<int:leave_id>', methods=['PUT', 'OPTIONS'])
+@jwt_required(optional=True)
 def update_leave(leave_id):
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual PUT request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
+    
     try:
         # Get user ID from JWT
         user_id = int(get_jwt_identity())
@@ -229,9 +271,20 @@ def update_leave(leave_id):
 # @route   DELETE /api/leaves/:id
 # @desc    Delete/Cancel leave request
 # @access  Private
-@leaves_bp.route('/<int:leave_id>', methods=['DELETE'])
-@jwt_required()
+@leaves_bp.route('/<int:leave_id>', methods=['DELETE', 'OPTIONS'])
+@jwt_required(optional=True)
 def delete_leave(leave_id):
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual DELETE request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
+    
     try:
         # Get user ID from JWT
         user_id = int(get_jwt_identity())
@@ -271,9 +324,20 @@ def delete_leave(leave_id):
 # @route   PATCH /api/leaves/:id/approve
 # @desc    Approve leave request
 # @access  Private (coordinators and above)
-@leaves_bp.route('/<int:leave_id>/approve', methods=['PATCH'])
-@jwt_required()
+@leaves_bp.route('/<int:leave_id>/approve', methods=['PATCH', 'OPTIONS'])
+@jwt_required(optional=True)
 def approve_leave(leave_id):
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual PATCH request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
+    
     try:
         # Get user ID and role from JWT
         user_id = int(get_jwt_identity())
@@ -328,9 +392,20 @@ def approve_leave(leave_id):
 # @route   PATCH /api/leaves/:id/reject
 # @desc    Reject leave request
 # @access  Private (coordinators and above)
-@leaves_bp.route('/<int:leave_id>/reject', methods=['PATCH'])
-@jwt_required()
+@leaves_bp.route('/<int:leave_id>/reject', methods=['PATCH', 'OPTIONS'])
+@jwt_required(optional=True)
 def reject_leave(leave_id):
+    # Handle OPTIONS request for CORS preflight
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    # Require authentication for actual PATCH request
+    if not get_jwt_identity():
+        return jsonify({
+            'success': False,
+            'message': 'Authentication required'
+        }), 401
+    
     try:
         # Get user ID and role from JWT
         user_id = int(get_jwt_identity())

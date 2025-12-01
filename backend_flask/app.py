@@ -3,6 +3,7 @@ from flask_cors import CORS
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 # Load environment variables
 load_dotenv()
@@ -13,12 +14,21 @@ from extensions import db, bcrypt, jwt
 # Initialize Flask app
 app = Flask(__name__)
 
+# Disable strict slashes to prevent 308 redirects that break CORS
+app.url_map.strict_slashes = False
+
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-this')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://root@localhost:3306/techtimeoff')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET', 'jwt-secret-key-change-this')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
+
+# Session configuration for OAuth
+app.config['SESSION_COOKIE_NAME'] = 'techtimeoff_session'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 # Initialize extensions with app
 db.init_app(app)
@@ -69,11 +79,16 @@ CORS(app,
 from routes.auth import auth_bp
 from routes.users import users_bp
 from routes.leaves import leaves_bp
+from routes.oauth import oauth_bp, init_oauth
+
+# Initialize OAuth
+init_oauth(app)
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(leaves_bp, url_prefix='/api/leaves')
+app.register_blueprint(oauth_bp, url_prefix='/api/auth')
 
 # Root route
 @app.route('/')
@@ -127,7 +142,8 @@ def api_root():
 def health():
     try:
         # Test database connection
-        db.session.execute('SELECT 1')
+        from sqlalchemy import text
+        db.session.execute(text('SELECT 1'))
         return jsonify({
             'status': 'healthy',
             'database': 'connected',

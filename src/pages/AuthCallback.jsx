@@ -42,23 +42,10 @@ export default function AuthCallback() {
           // Use AuthContext to manage user state
           await login(data.user, token)
 
-          // Navigate based on role
-          switch(data.user.role) {
-            case 'faculty':
-              navigate('/faculty/dashboard')
-              break
-            case 'coordinator':
-              navigate('/coordinator/dashboard')
-              break
-            case 'chief_coordinator':
-              navigate('/chief-coordinator/dashboard')
-              break
-            case 'principal':
-              navigate('/principal/dashboard')
-              break
-            default:
-              navigate('/faculty/dashboard')
-          }
+          console.log('Google OAuth Login successful:', data.user)
+
+          // Navigate to dashboard - the dashboard will show appropriate view based on role
+          navigate('/dashboard')
         } else {
           navigate('/login?error=auth_failed')
         }

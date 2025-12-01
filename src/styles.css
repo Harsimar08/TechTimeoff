@@ -1,12 +1,48 @@
-:root{
-  --bg: #f6f8fb;
-  --sidebar:#1f56a8; /* deep blue */
-  --panel:#ffffff;
-  --muted:#6b7280;
-  --accent:#2563eb;
-  --accent-2:#06b6d4;
-  --surface:#f3f6f9;
-  --border: #e6e9ef;
+/* Theme Variables */
+:root {
+  /* Light Theme (default) */
+  --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-secondary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-sidebar: linear-gradient(180deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --text-inverse: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --accent: #667eea;
+  --accent-2: #764ba2;
+  
+  /* Legacy variables for compatibility */
+  --bg: var(--bg-primary);
+  --sidebar: var(--bg-sidebar);
+  --panel: var(--bg-card);
+  --muted: var(--text-muted);
+  --surface: var(--bg-primary);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
+  --bg-secondary: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+  --bg-card: rgba(26, 32, 44, 0.95);
+  --bg-sidebar: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 15, 25, 0.98) 100%);
+  --text-primary: #f7fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #a0aec0;
+  --text-inverse: #1a202c;
+  --border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --accent: #667eea;
+  --accent-2: #764ba2;
+  
+  /* Legacy variables for compatibility */
+  --bg: var(--bg-primary);
+  --sidebar: var(--bg-sidebar);
+  --panel: var(--bg-card);
+  --muted: var(--text-muted);
+  --surface: var(--bg-primary);
 }
 
 /* Spinner Animation */
@@ -16,14 +52,26 @@
 }
 
 *{box-sizing:border-box}
-html,body,#root{height:100%;}
+html,body,#root{
+  height:100%;
+  margin: 0;
+  padding: 0;
+}
 body{
   margin:0;
-  font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: var(--surface);
-  color:#0f172a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
-.app-root{display:flex;flex-direction:column;min-height:100vh}
+.app-root{
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  background: var(--bg-primary);
+  transition: background 0.3s ease;
+}
 
 /* Top header bar (white) */
 .topbar{

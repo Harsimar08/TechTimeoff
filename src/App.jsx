@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import RequestDrawer from './components/RequestDrawer2'
 import LeaveRequest from './pages/LeaveRequest'
+import LeaveBalance from './pages/LeaveBalance'
+import Holidays from './pages/Holidays'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 
@@ -68,6 +70,8 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/leave-request" element={<LeaveRequest />} />
+            <Route path="/leave-balance" element={<LeaveBalance />} />
+            <Route path="/holidays" element={<Holidays />} />
             <Route path="/login" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>

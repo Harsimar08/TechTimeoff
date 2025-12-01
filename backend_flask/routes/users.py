@@ -118,6 +118,14 @@ def update_user(user_id):
             user.employee_id = data['employeeId'].strip() if data['employeeId'] else None
         if 'profileImage' in data:
             user.profile_image = data['profileImage']
+        if 'qualification' in data:
+            user.qualification = data['qualification'].strip() if data['qualification'] else None
+        if 'specialization' in data:
+            user.specialization = data['specialization'].strip() if data['specialization'] else None
+        if 'gender' in data:
+            user.gender = data['gender'].strip() if data['gender'] else None
+        if 'joiningDate' in data:
+            user.joining_date = data['joiningDate'] if data['joiningDate'] else None
         
         # Only admins can change role and status
         if user_role in ['chief_coordinator', 'principal']:
