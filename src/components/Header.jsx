@@ -80,50 +80,6 @@ export default function Header({onOpenRequest, onToggleSidebar, sidebarOpen}){
         alignItems: 'center',
         gap: '16px'
       }}>
-        <button
-          className="btn btn-ghost request-leave-btn"
-          onClick={onOpenRequest}
-          style={{
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%)',
-            color: '#764ba2',
-            fontWeight: 800,
-            borderRadius: '24px',
-            boxShadow: '0 6px 24px rgba(0,0,0,0.2)',
-            padding: '12px 36px',
-            fontSize: '15px',
-            letterSpacing: '0.5px',
-            border: '2px solid rgba(255,255,255,0.3)',
-            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            cursor: 'pointer',
-            position: 'relative',
-            overflow: 'hidden',
-            zIndex: 1
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.transform = 'scale(1.08) translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.3)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.transform = 'scale(1) translateY(0)';
-            e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.2)';
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%)';
-          }}
-        >
-          <span style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            borderRadius: '24px',
-            background: 'linear-gradient(120deg, rgba(255,255,255,0.4) 0%, transparent 60%)',
-            mixBlendMode: 'overlay',
-            animation: 'shine 3s linear infinite'
-          }} />
-          <span style={{position: 'relative', zIndex: 2}}>✨ Request Leave</span>
-        </button>
         <div className="top-user" style={{
           transition: 'all 0.3s ease',
           cursor: 'pointer'
