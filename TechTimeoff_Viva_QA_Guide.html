@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeachTimeoff Frontend Viva Q&A Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #1f2937;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #6b7280;
+            font-size: 1.2em;
+        }
+        
+        .toc {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h2 {
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+        
+        .toc ul { 
+            list-style: none;
+        }
+        
+        .toc li {
+            padding: 5px 0;
+        }
+        
+        .toc a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .section h2 {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            border-left: 4px solid #2563eb;
+            padding-left: 20px;
+        }
+        
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .answer {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .answer p {
+            margin-bottom: 10px;
+        }
+        
+        .answer ul, .answer ol {
+            margin: 10px 0 10px 20px;
+        }
+        
+        .answer li {
+            margin-bottom: 5px;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .benefits {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 10px 15px;
+            margin: 10px 0;
+        }
+        
+        .features {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 10px 15px;
+            margin: 10px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 2px solid #e5e7eb;
+            margin-top: 40px;
+            color: #6b7280;
+        }
+        
+        @media print {
+            body {
+                max-width: none;
+                padding: 10px;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .question {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TechTimeoff Frontend Viva Q&A Guide</h1>
+        <p>Comprehensive Question & Answer Guide for Frontend Development</p>
+        <p><strong>Project:</strong> Leave Management System | <strong>Technology:</strong> React.js</p>
+    </div>
+
+    <div class="toc">
+        <h2>📋 Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">1. Project Overview Questions</a></li>
+            <li><a href="#tech-stack">2. Frontend Technology Stack</a></li>
+            <li><a href="#architecture">3. Project Architecture & Structure</a></li>
+            <li><a href="#state-management">4. State Management</a></li>
+            <li><a href="#authentication">5. Authentication & Security</a></li>
+            <li><a href="#components">6. Component Architecture</a></li>
+            <li><a href="#ui-ux">7. UI/UX Design</a></li>
+            <li><a href="#performance">8. Performance & Optimization</a></li>
+            <li><a href="#data-viz">9. Data Visualization</a></li>
+            <li><a href="#api-integration">10. API Integration</a></li>
+            <li><a href="#testing">11. Testing & Debugging</a></li>
+            <li><a href="#deployment">12. Deployment & Environment</a></li>
+            <li><a href="#future">13. Future Improvements</a></li>
+        </ul>
+    </div>
+
+    <div class="section" id="overview">
+        <h2>1. Project Overview Questions</h2>
+        
+        <div class="question">
+            <h3>Q1: What is TechTimeoff and what problem does it solve?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> TechTimeoff is a Leave Management System designed for educational institutions like JIMS. It solves the problem of manual leave application processes by providing a digital platform where:</p>
+                <ul>
+                    <li>Faculty can apply for leaves digitally</li>
+                    <li>Coordinators can approve/reject them efficiently</li>
+                    <li>Administrators can track leave balances and history</li>
+                    <li>Real-time status updates eliminate paperwork</li>
+                </ul>
+                <div class="benefits">
+                    <strong>Benefits:</strong> Eliminates paperwork, provides real-time updates, improves efficiency, and maintains proper leave records.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q2: What is your role in this project?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I was primarily responsible for the frontend development, which included:</p>
+                <ul>
+                    <li>Creating user interfaces using React</li>
+                    <li>Implementing responsive design and user experience</li>
+                    <li>Building reusable components</li>
+                    <li>Managing client-side routing and navigation</li>
+                    <li>Implementing authentication flows</li>
+                    <li>Creating dashboards for different user roles</li>
+                    <li>API integration for backend communication</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="tech-stack">
+        <h2>2. Frontend Technology Stack</h2>
+        
+        <div class="question">
+            <h3>Q3: Which frontend technologies and libraries did you use?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> My technology stack includes:</p>
+                <ul>
+                    <li><strong>React 18.2.0</strong> - Main frontend framework for building user interfaces</li>
+                    <li><strong>React Router DOM 6.14.1</strong> - For client-side routing and navigation</li>
+                    <li><strong>Vite 5.1.0</strong> - Modern build tool and development server (faster than Create React App)</li>
+                    <li><strong>Recharts 2.5.0</strong> - For creating interactive charts and data visualization</li>
+                    <li><strong>Vanilla CSS</strong> - Custom styling with CSS variables for theming</li>
+                    <li><strong>Context API</strong> - For state management (authentication state)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q4: Why did you choose React over other frameworks?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I chose React because of:</p>
+                <div class="benefits">
+                    <ul>
+                        <li><strong>Component-based architecture</strong> - Promotes reusability and maintainability</li>
+                        <li><strong>Virtual DOM</strong> - Better performance for dynamic UI updates</li>
+                        <li><strong>Rich ecosystem</strong> - Large community and extensive libraries</li>
+                        <li><strong>Hooks</strong> - Modern way to manage state and side effects</li>
+                        <li><strong>Industry standard</strong> - Widely used in enterprise applications</li>
+                        <li><strong>Easy to learn</strong> - Gradual learning curve compared to Angular</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q5: Why did you use Vite instead of Create React App?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> Vite provides several advantages:</p>
+                <div class="benefits">
+                    <ul>
+                        <li><strong>Faster development</strong> - Hot Module Replacement (HMR) is much faster</li>
+                        <li><strong>Smaller bundle size</strong> - More efficient bundling</li>
+                        <li><strong>Native ES modules</strong> - Better performance in development</li>
+                        <li><strong>Built-in TypeScript support</strong> - Future-proof</li>
+                        <li><strong>Modern tooling</strong> - Uses esbuild for faster builds</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="architecture">
+        <h2>3. Project Architecture & Structure</h2>
+        
+        <div class="question">
+            <h3>Q6: Explain your project folder structure.</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <div class="code-block">
+src/
+├── components/     # Reusable UI components
+├── pages/         # Page-level components  
+├── contexts/      # React Context for state management
+├── utils/         # Utility functions and API calls
+├── styles/        # CSS styling files
+├── App.jsx        # Main app component with routing
+└── main.jsx       # Entry point
+                </div>
+                <p>This structure follows <span class="highlight">separation of concerns</span> and makes the codebase <span class="highlight">scalable and maintainable</span>.</p>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q7: How did you implement routing in your application?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I used <strong>React Router DOM v6</strong> with the following approach:</p>
+                <div class="code-block">
+// Protected routes with authentication check
+if (!isAuthenticated) {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
+      &lt;Route path="/signup" element={&lt;Signup /&gt;} /&gt;
+      &lt;Route path="*" element={&lt;Navigate to="/login" replace /&gt;} /&gt;
+    &lt;/Routes&gt;
+  )
+}
+
+// Authenticated routes
+&lt;Routes&gt;
+  &lt;Route path="/" element={&lt;Navigate to="/dashboard" replace /&gt;} /&gt;
+  &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+  &lt;Route path="/profile" element={&lt;Profile /&gt;} /&gt;
+  &lt;Route path="/leave-request" element={&lt;LeaveRequest /&gt;} /&gt;
+&lt;/Routes&gt;
+                </div>
+                <div class="features">
+                    <strong>Features implemented:</strong>
+                    <ul>
+                        <li>Protected routes - Redirect unauthenticated users to login</li>
+                        <li>Route guards - Prevent access based on authentication state</li>
+                        <li>Nested routing - Different layouts for auth and main app</li>
+                        <li>Programmatic navigation - Using useNavigate hook</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="state-management">
+        <h2>4. State Management</h2>
+        
+        <div class="question">
+            <h3>Q8: How did you handle state management in your application?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I used <strong>React Context API</strong> with hooks for global state management:</p>
+                <div class="code-block">
+// AuthContext for user authentication state
+const AuthContext = createContext(null)
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [token, setToken] = useState(localStorage.getItem('token'))
+  
+  // Methods: login, logout, updateUser, refreshUser
+}
+                </div>
+                <div class="benefits">
+                    <strong>Benefits:</strong>
+                    <ul>
+                        <li>Global state - Authentication state accessible throughout app</li>
+                        <li>No external dependencies - Built-in React solution</li>
+                        <li>Type safety - Custom hook with error handling</li>
+                        <li>Persistent state - Token stored in localStorage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q9: Why didn't you use Redux or other state management libraries?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ul>
+                    <li><strong>Project complexity</strong> - For a medium-sized app, Context API is sufficient</li>
+                    <li><strong>Learning curve</strong> - Context API is simpler to implement and understand</li>
+                    <li><strong>Bundle size</strong> - No additional dependencies</li>
+                    <li><strong>Built-in solution</strong> - Native React feature</li>
+                    <li><strong>Future migration</strong> - Can easily migrate to Redux if needed</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="authentication">
+        <h2>5. Authentication & Security</h2>
+        
+        <div class="question">
+            <h3>Q10: How did you implement authentication in the frontend?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I implemented <strong>JWT-based authentication</strong>:</p>
+                
+                <p><strong>Login Process:</strong></p>
+                <ol>
+                    <li>User submits credentials</li>
+                    <li>API returns JWT token and user data</li>
+                    <li>Token stored in localStorage</li>
+                    <li>User state updated in Context</li>
+                    <li>Redirect to dashboard</li>
+                </ol>
+
+                <div class="features">
+                    <strong>Security Features:</strong>
+                    <ul>
+                        <li>Token validation - Check token validity on app load</li>
+                        <li>Automatic logout - Clear invalid tokens</li>
+                        <li>Route protection - Prevent unauthorized access</li>
+                        <li>Token refresh - Refresh user data periodically</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+const login = async (userData, authToken) => {
+  localStorage.setItem('token', authToken)
+  setToken(authToken)
+  setUser(userData)
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q11: How do you handle API calls and error handling?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I created a <strong>centralized API utility</strong> (api-auth.js):</p>
+                
+                <div class="code-block">
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+export const authenticateUser = async (email, password, role) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, role })
+    })
+    
+    const data = await response.json()
+    if (data.success) {
+      return { token: data.token, user: data.user }
+    } else {
+      throw new Error(data.message)
+    }
+  } catch (error) {
+    console.error('Authentication error:', error)
+    throw error
+  }
+}
+                </div>
+                
+                <div class="features">
+                    <strong>Error Handling Features:</strong>
+                    <ul>
+                        <li>Try-catch blocks - Proper error catching</li>
+                        <li>User feedback - Display error messages</li>
+                        <li>Network errors - Handle connection issues</li>
+                        <li>Token expiry - Automatic logout on invalid token</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="components">
+        <h2>6. Component Architecture</h2>
+        
+        <div class="question">
+            <h3>Q12: Explain your component structure and reusability.</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I followed <strong>component-based architecture</strong>:</p>
+                
+                <p><strong>Reusable Components:</strong></p>
+                <ul>
+                    <li><code>Header</code> - Navigation and user info</li>
+                    <li><code>Sidebar</code> - Navigation menu</li>
+                    <li><code>Footer</code> - App footer</li>
+                    <li><code>StatCard</code> - Statistics display cards</li>
+                    <li><code>CircleProgress</code> - Progress indicators</li>
+                    <li><code>RequestDrawer</code> - Leave request form</li>
+                </ul>
+
+                <p><strong>Page Components:</strong></p>
+                <ul>
+                    <li><code>Dashboard</code> - Main dashboard with role-based content</li>
+                    <li><code>Profile</code> - User profile management</li>
+                    <li><code>LeaveRequest</code> - Leave application form</li>
+                    <li><code>Login/Signup</code> - Authentication pages</li>
+                </ul>
+
+                <div class="benefits">
+                    <strong>Benefits:</strong>
+                    <ul>
+                        <li>DRY principle - Don't repeat yourself</li>
+                        <li>Maintainability - Single place to update components</li>
+                        <li>Consistency - Uniform UI across the app</li>
+                        <li>Testability - Easy to test individual components</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q13: How did you implement responsive design?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I used <strong>CSS Flexbox and Grid</strong> with <strong>mobile-first approach</strong>:</p>
+                
+                <div class="code-block">
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .main-root {
+    margin-left: 0 !important;
+  }
+}
+                </div>
+
+                <div class="features">
+                    <strong>Responsive Features:</strong>
+                    <ul>
+                        <li>Flexible layouts - Grid and flexbox for different screen sizes</li>
+                        <li>Mobile navigation - Collapsible sidebar</li>
+                        <li>Scalable components - Components adapt to container size</li>
+                        <li>Touch-friendly - Appropriate touch targets for mobile</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="ui-ux">
+        <h2>7. UI/UX Design</h2>
+        
+        <div class="question">
+            <h3>Q14: What design principles did you follow?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ul>
+                    <li><strong>Consistency</strong> - Uniform color scheme and typography</li>
+                    <li><strong>Accessibility</strong> - Proper contrast ratios and keyboard navigation</li>
+                    <li><strong>User feedback</strong> - Loading states and error messages</li>
+                    <li><strong>Clean layout</strong> - Proper spacing and visual hierarchy</li>
+                    <li><strong>Color coding</strong> - Different colors for leave types and statuses</li>
+                </ul>
+
+                <p><strong>CSS Variables for Theming:</strong></p>
+                <div class="code-block">
+:root {
+  --bg: #f6f8fb;
+  --sidebar: #1f56a8;
+  --panel: #ffffff;
+  --accent: #2563eb;
+  --border: #e6e9ef;
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q15: How did you implement the dashboard with different user roles?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I created <strong>role-based dashboards</strong>:</p>
+                
+                <div class="code-block">
+// Different dashboard components for each role
+&lt;Routes&gt;
+  &lt;Route path="/dashboard" element={
+    user.role === 'faculty' ? &lt;FacultyDashboard /&gt; :
+    user.role === 'coordinator' ? &lt;CoordinatorDashboard /&gt; :
+    user.role === 'chief_coordinator' ? &lt;ChiefCoordinatorDashboard /&gt; :
+    user.role === 'principal' ? &lt;PrincipalDashboard /&gt; :
+    &lt;Dashboard /&gt;
+  } /&gt;
+&lt;/Routes&gt;
+                </div>
+
+                <div class="features">
+                    <strong>Role-specific Features:</strong>
+                    <ul>
+                        <li><strong>Faculty</strong> - Apply for leave, view balance, history</li>
+                        <li><strong>Coordinator</strong> - Approve/reject leaves, department overview</li>
+                        <li><strong>Chief Coordinator</strong> - Multi-department management</li>
+                        <li><strong>Principal</strong> - Institution-wide analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="performance">
+        <h2>8. Performance & Optimization</h2>
+        
+        <div class="question">
+            <h3>Q16: What performance optimizations did you implement?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ul>
+                    <li><strong>Code splitting</strong> - Lazy loading with React.lazy()</li>
+                    <li><strong>Memoization</strong> - React.memo for expensive components</li>
+                    <li><strong>Efficient re-renders</strong> - Proper dependency arrays in useEffect</li>
+                    <li><strong>Bundle optimization</strong> - Vite's tree shaking</li>
+                    <li><strong>Image optimization</strong> - Proper image formats and sizes</li>
+                    <li><strong>API optimization</strong> - Debounced search, pagination</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q17: How did you handle loading states and user experience?</h3>
+            <div class="answer">
+                <div class="code-block">
+if (loading) {
+  return (
+    &lt;div style={{ /* centered loading spinner */ }}&gt;
+      &lt;div style={{ /* animated spinner styles */ }}&gt;&lt;/div&gt;
+      &lt;p&gt;Loading...&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
+                </div>
+
+                <div class="features">
+                    <strong>UX Improvements:</strong>
+                    <ul>
+                        <li>Loading spinners - Visual feedback during API calls</li>
+                        <li>Skeleton screens - Placeholder content while loading</li>
+                        <li>Progressive enhancement - App works even with slow connections</li>
+                        <li>Error boundaries - Graceful error handling</li>
+                        <li>Smooth transitions - CSS transitions for better feel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="data-viz">
+        <h2>9. Data Visualization</h2>
+        
+        <div class="question">
+            <h3>Q18: How did you implement charts and data visualization?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I used <strong>Recharts library</strong> for creating interactive charts:</p>
+                
+                <div class="code-block">
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis } from 'recharts'
+
+// Leave balance pie chart
+const leaveData = [
+  { name: 'Used', value: usedLeaves, color: '#ef4444' },
+  { name: 'Available', value: availableLeaves, color: '#22c55e' }
+]
+
+&lt;PieChart width={200} height={200}&gt;
+  &lt;Pie data={leaveData} dataKey="value" /&gt;
+&lt;/PieChart&gt;
+                </div>
+
+                <div class="features">
+                    <strong>Chart Types Implemented:</strong>
+                    <ul>
+                        <li>Pie charts - Leave balance visualization</li>
+                        <li>Bar charts - Monthly leave trends</li>
+                        <li>Progress circles - Leave utilization</li>
+                        <li>Interactive legends - Click to filter data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="api-integration">
+        <h2>10. API Integration</h2>
+        
+        <div class="question">
+            <h3>Q19: How did you integrate with the backend API?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong> I created <strong>centralized API functions</strong> with proper error handling:</p>
+                
+                <div class="code-block">
+// Environment-based API URL
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+// Authenticated API calls with token
+const fetchWithAuth = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('token')
+  return fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      ...options.headers
+    }
+  })
+}
+                </div>
+
+                <div class="features">
+                    <strong>API Integration Features:</strong>
+                    <ul>
+                        <li>Environment variables - Different URLs for dev/production</li>
+                        <li>Token management - Automatic token inclusion</li>
+                        <li>Error handling - Consistent error responses</li>
+                        <li>Type safety - Proper data validation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="testing">
+        <h2>11. Testing & Debugging</h2>
+        
+        <div class="question">
+            <h3>Q20: How did you debug and test your application?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ul>
+                    <li><strong>Browser DevTools</strong> - Console logs, React DevTools, Network tab</li>
+                    <li><strong>Error boundaries</strong> - Catch and display errors gracefully</li>
+                    <li><strong>Console logging</strong> - Strategic logging for debugging</li>
+                    <li><strong>Manual testing</strong> - User flow testing across different scenarios</li>
+                    <li><strong>Cross-browser testing</strong> - Ensure compatibility</li>
+                </ul>
+
+                <div class="features">
+                    <strong>Debugging Tools Used:</strong>
+                    <ul>
+                        <li>React Developer Tools - Component state inspection</li>
+                        <li>Network monitoring - API call inspection</li>
+                        <li>Performance profiler - Identify performance bottlenecks</li>
+                        <li>Console debugging - Step-by-step code execution</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="deployment">
+        <h2>12. Deployment & Environment</h2>
+        
+        <div class="question">
+            <h3>Q21: How do you handle different environments (development/production)?</h3>
+            <div class="answer">
+                <div class="code-block">
+// Environment variables in .env files
+VITE_API_URL=http://localhost:5000/api  // Development
+VITE_API_URL=https://api.techtimeoff.com/api  // Production
+
+// Usage in code
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+                </div>
+
+                <div class="features">
+                    <strong>Environment Management:</strong>
+                    <ul>
+                        <li>Development - Local backend connection</li>
+                        <li>Production - Live server endpoints</li>
+                        <li>Staging - Testing environment</li>
+                        <li>Build optimization - Different builds for each environment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <h3>Q22: What challenges did you face and how did you solve them?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ol>
+                    <li><strong>CORS Issues</strong> - Configured proper CORS headers in backend</li>
+                    <li><strong>Authentication State Management</strong> - Implemented persistent login with localStorage</li>
+                    <li><strong>Responsive Design</strong> - Used CSS Grid and Flexbox for adaptability</li>
+                    <li><strong>API Error Handling</strong> - Created centralized error handling utilities</li>
+                    <li><strong>Route Protection</strong> - Implemented proper authentication guards</li>
+                    <li><strong>Performance</strong> - Optimized re-renders with proper state management</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="future">
+        <h2>13. Future Improvements</h2>
+        
+        <div class="question">
+            <h3>Q23: What features would you add or improve in the future?</h3>
+            <div class="answer">
+                <p><strong>Answer:</strong></p>
+                <ul>
+                    <li><strong>Push notifications</strong> - Real-time leave status updates</li>
+                    <li><strong>Offline support</strong> - Service workers for offline functionality</li>
+                    <li><strong>Dark mode</strong> - Theme switching capability</li>
+                    <li><strong>Advanced filtering</strong> - More search and filter options</li>
+                    <li><strong>Bulk operations</strong> - Multiple leave approvals</li>
+                    <li><strong>Mobile app</strong> - React Native version</li>
+                    <li><strong>Accessibility</strong> - Better screen reader support</li>
+                    <li><strong>Analytics</strong> - Advanced reporting and insights</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Technical Interview Tips</h2>
+        
+        <div class="features">
+            <h3>Be Ready to:</h3>
+            <ul>
+                <li><strong>Draw architecture diagrams</strong> - Show component hierarchy</li>
+                <li><strong>Explain code snippets</strong> - Walk through key functions</li>
+                <li><strong>Discuss trade-offs</strong> - Why you chose specific approaches</li>
+                <li><strong>Handle follow-up questions</strong> - Be prepared for deeper technical questions</li>
+                <li><strong>Show problem-solving</strong> - How you debugged issues</li>
+                <li><strong>Demonstrate knowledge</strong> - React concepts, JavaScript fundamentals</li>
+            </ul>
+        </div>
+
+        <div class="benefits">
+            <h3>Key Points to Remember:</h3>
+            <ul>
+                <li>Emphasize your <strong>problem-solving approach</strong></li>
+                <li>Highlight <strong>user experience considerations</strong></li>
+                <li>Show understanding of <strong>modern React patterns</strong></li>
+                <li>Demonstrate <strong>code organization skills</strong></li>
+                <li>Explain <strong>performance considerations</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Good luck with your viva!</strong></p>
+        <p>Remember to speak confidently about what you've built and be prepared to explain your technical decisions.</p>
+        <p>The key is to show that you understand not just what you did, but why you did it that way.</p>
+        <p><em>Generated on November 24, 2025</em></p>
+    </div>
+</body>
+</html>
